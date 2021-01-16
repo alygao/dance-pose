@@ -5,9 +5,10 @@ const WEIGHTINGS = [1, 3, 3, 1, 1, 5, 5, 5, 5, 5, 5, 1, 1, 0, 0, 0, 0]
 const WEIGHTING_SUM = 40
 
 
-// Returns a value in [0, 100], where 100 is more similar
-export default function calcScore(pose1, pose2) {
-    // Returns array of values in [0, 1]
+// Takes in two arrays of poses to compare
+// Returns value in [0, 1], where 1 is more similar
+export default function calcPoseArrScore(poseArr1, poseArr2) {
+    // Returns array of values, each in [0, 1]
     function calcCosSimArr(pose1, pose2) {
         let res = []
         for (let i = 0; i < WEIGHTINGS.length; i++) {
@@ -29,25 +30,35 @@ export default function calcScore(pose1, pose2) {
         return Math.min(sum / WEIGHTING_SUM, 1)
     }
 
-    // Returns value in [0, 1], where 1 is more similar
+    // Returns value in [0, 1], where 0 is more similar
     function calcEucScore(cosSimArr) {
         let sum = 0;
         for (let i = 0; i < WEIGHTINGS.length; i++) {
             sum += Math.sqrt(2 * (1 - cosSimArr[i])) * WEIGHTINGS[i]
         }
-        return Math.min(sum /  WEIGHTING_SUM, 1)
+        return Math.min(sum / WEIGHTING_SUM, 1)
+    }
+
+    // Returns a value in [0, 1], where 1 is more similar
+    function calcPoseScore(pose1, pose2) {
+        let cosSimArr = calcCosSimArr(pose1, pose2)
+        let cosScore = calcCosScore(cosSimArr)
+        let euclidScore = calcEucScore(cosSimArr)
+        console.log('CosSimArr: ' + cosSimArr)
+        console.log('Cosine Score: ' + cosScore)
+        console.log('Euclid Score: ' + euclidScore)
+
+        return Math.max(0, cosScore - euclidScore)
     }
 
 
-    let cosSimArr = calcCosSimArr(pose1, pose2)
-    let cosScore = calcCosScore(cosSimArr)
-    let euclidScore = calcEucScore(cosSimArr)
-    console.log('CosSimArr: ' + cosSimArr)
-    console.log('Cosine Score: ' + cosScore)
-    console.log('Euclid Score: ' + euclidScore)
 
-    let finScore = (Math.max(0, cosScore - euclidScore) * 100).toFixed(2)
-    console.log('FINAL SCORE: ' + finScore + '%')
+    let minLen = Math.min(poseArr1.length, poseArr2.length)
+    let finScore = 0
+    for (let i = 0; i < minLen; i++) {
+        finScore += calcPoseScore(poseArr1[i], poseArr2[i])
+    }
+    finScore = (finScore / minLen * 100).toFixed(2)
+    console.log(finScore)
     return finScore
 }
-

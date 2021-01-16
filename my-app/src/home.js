@@ -80,7 +80,7 @@ function Home() {
   return (
     <div className="Home">
       <header className="Home-header">
-        <p>{calcScore(testObj, testObj2)}</p>
+        <p>{calcScore([testObj, testObj, testObj], [testObj, testObj2, testObj])}</p>
       </header>
 
       <form onSubmit={handleSubmit}>
