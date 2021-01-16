@@ -1,6 +1,7 @@
 
 import React, { useState, useCallback } from 'react';
 import './home.css';
+import Video from './video.js';
 import PoseNet from "react-posenet"
 import compareSimilarity from "./compareSimilarity"
 import calcScore from "./calcScore"
@@ -120,6 +121,8 @@ function Home() {
           </div>
         </div>
       </form>
+
+      <Video video = {professionalVideo}></Video>
 
       <PoseNet
         className="min-vh-100"

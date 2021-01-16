@@ -11,15 +11,15 @@ function setup() {
     video.play();
     video.volume(0);
   });
-  video2 = createVideo(["2_blackpink.mp4"], () => {
-    video2.play();
-    video2.volume(0);
-  });
+  // video2 = createVideo(["2_blackpink.mp4"], () => {
+  //   video2.play();
+  //   video2.volume(0);
+  // });
   createCanvas(406, 720);
   canvas =  document.getElementById("myCanvas");
   context = canvas.getContext('2d');
   video.size(width, height);
-  video2.size(width, height);
+  // video2.size(width, height);
   poseNet = ml5.poseNet(video, () => {
     console.log("Model 1 is ready");
   });
@@ -28,17 +28,18 @@ function setup() {
     poses = results;
     drawSkeleton();
     drawKeypoints();
+    stopVideo();
   });
 
-  poseNet2 = ml5.poseNet(video2, () => {
-    console.log("Model 2 is ready");
-  });
-  // Listen to new 'pose' events
-  poseNet2.on("pose", function(results) {
-    poses2 = results;
-    drawSkeleton();
-    drawKeypoints();
-  });
+  // poseNet2 = ml5.poseNet(video2, () => {
+  //   console.log("Model 2 is ready");
+  // });
+  // // Listen to new 'pose' events
+  // poseNet2.on("pose", function(results) {
+  //   poses2 = results;
+  //   drawSkeleton();
+  //   drawKeypoints();
+  // });
 
   // poseNet.removeListener('pose', function() {
   //   video.remove();
@@ -130,3 +131,5 @@ function drawSkeleton() {
     }
   }
 }
+
+export Video;

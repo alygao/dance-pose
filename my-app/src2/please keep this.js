@@ -1,23 +1,25 @@
 let video;
 let poses = [];
 let canvas;
-let context;
+
+function cheese (results) {
+  poses = results;
+}
+
 function setup() {
   video = createVideo(["blackpink.mp4"], () => {
-    video.loop();
+    video.play();
     video.volume(0);
   });
   createCanvas(406, 720);
-  canvas =  document.getElementById("myCanvas");
-  context = canvas.getContext('2d');
+  //canvas =  document.getElementById("myCanvas");
+  // context = canvas.getContext('2d');
   video.size(width, height);
   poseNet = ml5.poseNet(video, () => {
     console.log("Model is ready");
   });
   // Listen to new 'pose' events
-  poseNet.on("pose", function(results) {
-    poses = results;
-  });
+  poseNet.on("pose", cheese);
   // video.hide();
 }
 
@@ -29,31 +31,31 @@ function draw() {
   // drawPose();
 }
 
-function drawPose() {
-  for (let i = 0; i < poses.length; i++) {
-    let pose = poses[i].pose;
-    console.log(pose);
-    let skeleton = poses[i].skeleton;
-    for (let j = 0; j < pose.keypoints.length; j++) {
-       // A keypoint is an object describing a body part (like rightArm or leftShoulder)
-       let keypoint = pose.keypoints[j];
-       // Only draw an ellipse is the pose probability is bigger than 0.2
-       if (keypoint.score > 0.2) {
-         fill(255, 0, 0);
-         noStroke();
-         ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
-       }
-    }
-    for (let j = 0; j < skeleton.length; j++) {
-      let partA = skeleton[j][0];
-      let partB = skeleton[j][1];
-      stroke(255, 0, 0);
-      line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
-    }
-    createCanvas(406, 720);
-    // remove();
-  }
-}
+// function drawPose() {
+//   for (let i = 0; i < poses.length; i++) {
+//     let pose = poses[i].pose;
+//     console.log(pose);
+//     let skeleton = poses[i].skeleton;
+//     for (let j = 0; j < pose.keypoints.length; j++) {
+//        // A keypoint is an object describing a body part (like rightArm or leftShoulder)
+//        let keypoint = pose.keypoints[j];
+//        // Only draw an ellipse is the pose probability is bigger than 0.2
+//        if (keypoint.score > 0.2) {
+//          fill(255, 0, 0);
+//          noStroke();
+//          ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
+//        }
+//     }
+//     for (let j = 0; j < skeleton.length; j++) {
+//       let partA = skeleton[j][0];
+//       let partB = skeleton[j][1];
+//       stroke(255, 0, 0);
+//       line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
+//     }
+//     createCanvas(406, 720);
+//     // remove();
+//   }
+// }
 
 function drawKeypoints()  {
   // Loop through all the poses detected
@@ -75,7 +77,7 @@ function drawKeypoints()  {
     // canvas.clearRect(0,0, canvas.width, canvas.height);
     // setTimeout(3000)
     // remove();s
-
+    //setTimeout( poseNet.removeListener("pose", cheese), 15000);
   }
 }
 
