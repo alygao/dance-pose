@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+
+import React, { useState, useCallback } from 'react';
 import './home.css';
-//posenet
+import PoseNet from "react-posenet"
+import compareSimilarity from "./compareSimilarity"
 
 function Home() {
   let professionalInput = React.createRef();
@@ -8,6 +10,9 @@ function Home() {
 
   let [professionalVideo, setProfessionalVideo] = useState(null);
   let [ownVideo, setOwnVideo] = useState(null);
+
+  const [count, checkPoses] = compareSimilarity()
+  const onEstimate = useCallback(poses => checkPoses(poses), [checkPoses])
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -70,6 +75,15 @@ function Home() {
           </div>
         </div>
       </form>
+
+      <PoseNet
+        className="min-vh-100"
+        facingMode="environment"
+        inferenceConfig={
+          {decodingMethod: "single-person"}
+        }
+        onEstimate={onEstimate}
+      /> 
     </div>
   );
 } 
