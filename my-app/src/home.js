@@ -3,6 +3,51 @@ import React, { useState, useCallback } from 'react';
 import './home.css';
 import PoseNet from "react-posenet"
 import compareSimilarity from "./compareSimilarity"
+import calcScore from "./calcScore"
+
+const testObj = {
+  keypoints: [
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+  ]
+}
+const testObj2 = {
+  keypoints: [
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 0, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 0, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 443.168521094415, y: 556.676242472 } },
+  ]
+}
+
 
 function Home() {
   let professionalInput = React.createRef();
@@ -35,7 +80,7 @@ function Home() {
   return (
     <div className="Home">
       <header className="Home-header">
-        <p>Hello World!</p>
+        <p>{calcScore(testObj, testObj2)}</p>
       </header>
 
       <form onSubmit={handleSubmit}>
