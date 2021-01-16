@@ -5,12 +5,14 @@ let poses2 = [];
 let canvas;
 let context;
 function setup() {
-  video = createVideo(["renegade.mp4"], () => {
-    video.loop();
+  background(100);
+  video = createVideo(["blackpink.mp4"], () => {
+    // video.load();
+    video.play();
     video.volume(0);
   });
-  video2 = createVideo(["blackpink.mp4"], () => {
-    video2.loop();
+  video2 = createVideo(["2_blackpink.mp4"], () => {
+    video2.play();
     video2.volume(0);
   });
   createCanvas(406, 720);
@@ -19,30 +21,46 @@ function setup() {
   video.size(width, height);
   video2.size(width, height);
   poseNet = ml5.poseNet(video, () => {
-    console.log("Model is ready");
+    console.log("Model 1 is ready");
   });
   // Listen to new 'pose' events
   poseNet.on("pose", function(results) {
     poses = results;
+    drawSkeleton();
+    drawKeypoints();
   });
 
   poseNet2 = ml5.poseNet(video2, () => {
-    console.log("Model is ready");
+    console.log("Model 2 is ready");
   });
   // Listen to new 'pose' events
   poseNet2.on("pose", function(results) {
     poses2 = results;
+    drawSkeleton();
+    drawKeypoints();
   });
+
+  // poseNet.removeListener('pose', function() {
+  //   video.remove();
+  // });
+  // poseNet2.removeListener('pose', stopVideo(video2));
   // video.hide();
+  // video2.hide();
+  // video.onended(stopVideo(video));
+  // video2.onended(stopVideo(video2));
 }
 
-function draw() {
-  console.log("in draw()")
-  // image(video, 0, 0, width, height);
-  drawSkeleton();
-  drawKeypoints();
-  // drawPose();
+function stopVideo (video) {
+  video.remove();
 }
+
+// function draw() {
+//   console.log("in draw()")
+//   // image(video, 0, 0, width, height);
+//   drawSkeleton();
+//   drawKeypoints();
+//   // drawPose();
+// }
 
 // function drawPose() {
 //   for (let i = 0; i < poses.length; i++) {
@@ -82,7 +100,7 @@ function drawKeypoints()  {
       let keypoint = pose.keypoints[j];
       // Only draw an ellipse is the pose probability is bigger than 0.2
       if (keypoint.score > 0.2) {
-        fill(255, 0, 0);
+        fill(142, 165, 226);
         noStroke();
         ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
       }
@@ -107,7 +125,7 @@ function drawSkeleton() {
     for (let j = 0; j < skeleton.length; j++) {
       let partA = skeleton[j][0];
       let partB = skeleton[j][1];
-      stroke(255, 0, 0);
+      stroke(142, 165, 226);
       line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
     }
   }
