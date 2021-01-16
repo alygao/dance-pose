@@ -10,12 +10,23 @@ function Home() {
   let [ownVideo, setOwnVideo] = useState(null);
 
   function handleSubmit(event) {
-    setProfessionalVideo(professionalInput.value);
-    setOwnVideo(ownInput.value);
-    console.log("running");
     event.preventDefault();
+    // const files = Array.from(event.target.files)
+    // setProfessionalVideo(files[0]);
+    // setOwnVideo(files[1]);
+    console.log("running");
   }
-  
+
+  function handleProfessionalChange(e) {
+    const files = Array.from(e.target.files)
+    setProfessionalVideo(files[0]);
+  }
+
+  function handleOwnChange(e) {
+    const files = Array.from(e.target.files)
+    setOwnVideo(files[0]);
+  }
+
   return (
     <div className="Home">
       <header className="Home-header">
@@ -24,14 +35,15 @@ function Home() {
 
       <form onSubmit={handleSubmit}>
         <div className="buttons">
-          <p>
+
             <div className="choose-file-button">
               <label className="custom-file-upload">
                 <input type="file"
                   id="file"
                   size="60"
                   required 
-                  ref={professionalInput}/>
+                  ref={professionalInput}
+                  onChange={handleProfessionalChange}/>
               choose professional video file
               </label>
             </div>
@@ -42,12 +54,12 @@ function Home() {
                   id="file"
                   size="60"
                   required 
-                  ref={ownInput}/>
+                  ref={ownInput}
+                  onChange={handleOwnChange}/>
               choose your own video file
               </label>
             </div>
-            
-          </p>
+    
 
 
           <div className="submit-button">
