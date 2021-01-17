@@ -46,9 +46,6 @@ function calcPoseArrScore(poseArr1, poseArr2) {
     let cosSimArr = calcCosSimArr(pose1, pose2)
     let cosScore = calcCosScore(cosSimArr)
     let euclidScore = calcEucScore(cosSimArr)
-    // console.log('CosSimArr: ' + cosSimArr)
-    // console.log('Cosine Score: ' + cosScore)
-    // console.log('Euclid Score: ' + euclidScore)
 
     return Math.max(0, cosScore - euclidScore)
   }
@@ -174,30 +171,30 @@ function calcPoseArrScore(poseArr1, poseArr2) {
 
 let video;
 let poses = [];
+let professionalFile;
+let professionalFileURL;
+let ownFile;
+let ownFileURL;
+let secondCall = false;
 
-function test(event) {
-  if (this.files in window) { // checks it's defined
-    var file = this.files[0];
-    // var type = file.type
-    var videoNode = document.querySelector('video')
-
-    var fileURL = URL.createObjectURL(file)
-    videoNode.src = fileURL
-  }
+function onProfessionalSubmit(event) {
+    event.preventDefault();
+    setup(professionalFileURL);
+    document.getElementById("submit1").disabled = true;
+    secondCall = true;
 }
 
-function onSubmit(event) {
+function onOwnSubmit(event) {
   event.preventDefault();
-  //localFileVideoPlayer();
-  test(event);
-  // make the video display block
+  setup(ownFileURL);
+  document.getElementById("submit2").disabled = true;
 }
 
 function setup(asset) {
-  video = createVideo([asset], () => {
-    video.play();
-    video.volume(0);
-  });
+    video = createVideo([asset], () => {
+        video.play();
+        video.volume(0);
+      });
 
   createCanvas(406, 720);
 
@@ -218,7 +215,6 @@ function draw() {
   // image(video, 0, 0, width, height);
   drawSkeleton();
   drawKeypoints();
-  // drawPose();
 }
 
 const LIMIT = 100
@@ -229,8 +225,7 @@ let poseArr2 = []
 
 function drawKeypoints() {
   for (let i = 0; i < poses.length; i++) {
-    // context.clearRect(0, 0, canvas.width, canvas.height);
-
+    
     let pose = poses[i].pose;
     if (counter++ < LIMIT) {
       poseArr1.push(pose)
@@ -257,13 +252,8 @@ function drawKeypoints() {
         ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
       }
     }
-    // canvas.clearRect(0,0, canvas.width, canvas.height);
-    // setTimeout(3000)
-    // remove();s
-    //setTimeout( poseNet.removeListener("pose", cheese), 15000);
   }
 }
-
 
 // A function to draw the skeletons
 function drawSkeleton() {
@@ -283,31 +273,35 @@ function drawSkeleton() {
   }
 }
 
-(function localFileVideoPlayer() {
-  'use strict'
+(function localProfessionalVideoPlayer() {
+	'use strict'
   var URL = window.URL || window.webkitURL
   var displayMessage = function (message, isError) {
     var element = document.querySelector('#message')
     element.innerHTML = message
-    element.className = isError ? 'error' : 'info'
+    element.className = isError ? 'error' : 'info';
   }
-  var playSelectedFile = function (event) {
-    var file = this.files[0]
-    var type = file.type
-    // var videoNode = document.querySelector('video')
-    // var canPlay = videoNode.canPlayType(type)
-    // if (canPlay === '') canPlay = 'no'
-    // var message = 'Can play type "' + type + '": ' + canPlay
-    // var isError = canPlay === 'no'
-    // displayMessage(message, isError)
+  let playProfessionalFile = function (event) {
+    professionalFile = this.files[0]
 
-    // if (isError) {
-    //   return
-    // }
-
-    var fileURL = URL.createObjectURL(file);
-    setup(fileURL);
+    professionalFileURL = URL.createObjectURL(professionalFile);
   }
-  var inputNode = document.querySelector('input')
-  inputNode.addEventListener('change', playSelectedFile, false)
+  var inputNode = document.querySelector('input');
+  inputNode.addEventListener('change', playProfessionalFile, false);
+})()
+
+(function localOwnVideoPlayer() { //talk to alyssa, make them match up with HTML separate video submissions and pages.
+	'use strict'
+  var URL = window.URL || window.webkitURL
+  var displayMessage = function (message, isError) {
+    var element = document.querySelector('#message');
+    element.innerHTML = message;
+    element.className = isError ? 'error' : 'info';
+  }
+  let playOwnFile = function (event) {
+    ownFile = this.files[0];
+    ownFileURL = URL.createObjectURL(ownFile);
+  }
+  var inputNode = document.querySelector('input');
+  inputNode.addEventListener('change', playOwnFile, false);
 })()
