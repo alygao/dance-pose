@@ -205,6 +205,7 @@ function setup(asset) {
   poseNet = ml5.poseNet(video, () => {
     console.log("Model is ready");
   });
+  
   // Listen to new 'pose' events
   poseNet.on("pose", function (results) {
     poses = results;
@@ -304,11 +305,9 @@ function drawSkeleton() {
     //   return
     // }
 
-    var fileURL = URL.createObjectURL(file)
-
+    var fileURL = URL.createObjectURL(file);
     setup(fileURL);
   }
   var inputNode = document.querySelector('input')
   inputNode.addEventListener('change', playSelectedFile, false)
 })()
-
