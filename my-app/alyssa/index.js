@@ -1,5 +1,5 @@
 // Takes in two arrays of poses to compare
-async function calcPoseArrScore(poseArr1, poseArr2) {
+function calcPoseArrScore(poseArr1, poseArr2) {
   const WEIGHTINGS = [1, 3, 3, 1, 1, 5, 5, 5, 5, 5, 5, 1, 1, 0, 0, 0, 0]   // More important body parts are weighted more
   const WEIGHTING_SUM = 40
 
@@ -56,12 +56,12 @@ async function calcPoseArrScore(poseArr1, poseArr2) {
   // Takes an array of calculated poseScores
   // Returns the most and least similar poseComparisons
   function getHighlights(poseScoreArr) {
-    if (poseScoreArr.length <= 1) { // choose no best/worst moments
+    if (poseScoreArr.length <= 1) { // choose 1 best/worst moment
       return {
-        maxes: {},
-        mins: {}
+        maxes: [{ score: poseScoreArr[0], ind: 0 }],
+        mins: [{ score: poseScoreArr[0], ind: 0 }]
       }
-    } else { // choose 1 best and 1 worst moment
+    } else if (poseScoreArr.length <= 5) { // choose 1 best and 1 worst moment
       let min = { score: Number.MAX_SAFE_INTEGER, ind: -1 }
       let max = { score: Number.MIN_SAFE_INTEGER, ind: -1 }
       for (let i = 0; i < poseScoreArr.length; i++) {
@@ -78,9 +78,75 @@ async function calcPoseArrScore(poseArr1, poseArr2) {
       min.score = (min.score * 100).toFixed(2)
       max.score = (max.score * 100).toFixed(2)
       return {
-        maxes: max,
-        mins: min
+        maxes: [max],
+        mins: [min]
       }
+    } else {
+      // min < min2 < min3
+      let min = { score: Number.MAX_SAFE_INTEGER, ind: -1 }
+      let min2 = { score: Number.MAX_SAFE_INTEGER, ind: -1 }
+      let min3 = { score: Number.MAX_SAFE_INTEGER, ind: -1 }
+      
+      // max > max2 > max3
+      let max = { score: Number.MIN_SAFE_INTEGER, ind: -1 }
+      let max2 = { score: Number.MIN_SAFE_INTEGER, ind: -1 }
+      let max3 = { score: Number.MIN_SAFE_INTEGER, ind: -1 }
+
+      for (let i = 0; i < poseScoreArr.length; i++) {
+        if (poseScoreArr[i] < min.score) {
+          min3.score = min2.score
+          min3.ind = min2.ind
+
+          min2.score = min.score
+          min2.ind = min.ind
+
+          min.score = poseScoreArr[i]
+          min.ind = i
+        } else if (poseScoreArr[i] < min2.score) {
+          min3.score = min2.score
+          min3.ind = min2.ind
+
+          min2.score = poseScoreArr[i]
+          min2.ind = i
+        } else if (poseScoreArr[i] < min3.score) {
+          min3.score = poseScoreArr[i]
+          min3.ind = i
+        }
+
+        if (poseScoreArr[i] > max.score) {
+          max3.score = max2.score
+          max3.ind = max2.ind
+
+          max2.score = max.score
+          max2.ind = max.ind
+
+          max.score = poseScoreArr[i]
+          max.ind = i
+        } else if (poseScoreArr[i] > max2.score) {
+          max3.score = max2.score
+          max3.ind = max2.ind
+
+          max2.score = poseScoreArr[i]
+          max2.ind = i
+        } else if (poseScoreArr[i] > max3.score) {
+          max3.score = poseScoreArr[i]
+          max3.ind = i
+        }
+      }
+
+      res = {
+        maxes: [max, max2, max3],
+        mins: [min, min2, min3]
+      }
+      for (let el of res.maxes) {
+        el.score = (el.score * 100).toFixed(2)
+        el.ind = el.ind / 50
+      }
+      for (let el of res.mins) {
+        el.score = (el.score * 100).toFixed(2)
+        el.ind = el.ind / 50
+      }
+      return res
     }
   }
 
@@ -97,7 +163,6 @@ async function calcPoseArrScore(poseArr1, poseArr2) {
   console.log('FINAL SCORE: ' + finScore)
 
   let highlights = getHighlights(poseScoreArr)
-  console.log('HIGHLIGHTS BEST: ' + highlights.maxes.score + ' WORST: ' + highlights.mins.score)
 
   return {
     score: finScore,
@@ -107,37 +172,33 @@ async function calcPoseArrScore(poseArr1, poseArr2) {
 
 
 
-
 let video;
 let poses = [];
 
 function test(event) {
-    var file = this.files[0]
+  if (this.files in window) { // checks it's defined
+    var file = this.files[0];
     // var type = file.type
     var videoNode = document.querySelector('video')
-    
 
     var fileURL = URL.createObjectURL(file)
     videoNode.src = fileURL
   }
-
-function onSubmit(event) {
-    event.preventDefault();
-    //localFileVideoPlayer();
-    test(event);
-    // make the video display block
 }
 
-function cheese (results) {
-  poses = results;
+function onSubmit(event) {
+  event.preventDefault();
+  //localFileVideoPlayer();
+  test(event);
+  // make the video display block
 }
 
 function setup(asset) {
-    video = createVideo([asset], () => {
-        video.play();
-        video.volume(0);
-      });
-    
+  video = createVideo([asset], () => {
+    video.play();
+    video.volume(0);
+  });
+
   createCanvas(406, 720);
 
   //video.size(width, height);
@@ -145,7 +206,9 @@ function setup(asset) {
     console.log("Model is ready");
   });
   // Listen to new 'pose' events
-  poseNet.on("pose", cheese);
+  poseNet.on("pose", function (results) {
+    poses = results;
+  });
   // video.hide();
 }
 
@@ -157,22 +220,29 @@ function draw() {
   // drawPose();
 }
 
-const LIMIT = 5
+const LIMIT = 100
 let counter = 0
 let oneTimeTrigger = true
 let poseArr1 = []
 let poseArr2 = []
 
-function drawKeypoints()  {
+function drawKeypoints() {
   for (let i = 0; i < poses.length; i++) {
     // context.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     let pose = poses[i].pose;
     if (counter++ < LIMIT) {
       poseArr1.push(pose)
       console.log(pose)
     } else if (oneTimeTrigger) {
-      calcPoseArrScore(poseArr1, poseArr1)
+      let res = calcPoseArrScore(poseArr1, poseArr1)
+      console.log(res.score)
+      console.log('Best pose at (' + res.highlights.maxes[0].score + '|' + res.highlights.maxes[0].ind+ ' sec), ('
+      + res.highlights.maxes[1].score + '|' + res.highlights.maxes[1].ind  + ' sec), ('
+      + res.highlights.maxes[2].score + '|' + res.highlights.maxes[2].ind  + ' sec)')
+      console.log('Worst pose at ('  + res.highlights.mins[0].score + '|' + res.highlights.mins[0].ind  + ' sec), ('
+      + res.highlights.mins[1].score + '|' + res.highlights.mins[1].ind + ' sec), ('
+      + res.highlights.mins[2].score + '|' + res.highlights.mins[2].ind  + ' sec)')
       oneTimeTrigger = false
     }
 
@@ -213,7 +283,7 @@ function drawSkeleton() {
 }
 
 (function localFileVideoPlayer() {
-	'use strict'
+  'use strict'
   var URL = window.URL || window.webkitURL
   var displayMessage = function (message, isError) {
     var element = document.querySelector('#message')
