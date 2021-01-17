@@ -39,7 +39,7 @@ function calcPoseArrScore(poseArr1, poseArr2) {
       sum += Math.sqrt(2 * (1 - cosSimArr[i])) * WEIGHTINGS[i]
     }
     return Math.min(sum / WEIGHTING_SUM, 1)
-  }
+    }
 
   // Returns a value in [0, 1], where 1 is more similar
   function calcPoseScore(pose1, pose2) {
@@ -168,7 +168,6 @@ function calcPoseArrScore(poseArr1, poseArr2) {
 }
 
 
-
 let video;
 let poses = [];
 let professionalFile;
@@ -178,10 +177,12 @@ let ownFileURL;
 let secondCall = false;
 
 function onProfessionalSubmit(event) {
+  console.log("Raymond");
     event.preventDefault();
     setup(professionalFileURL);
     document.getElementById("submit1").disabled = true;
     secondCall = true;
+    
 }
 
 function onOwnSubmit(event) {
@@ -247,7 +248,7 @@ function drawKeypoints() {
       let keypoint = pose.keypoints[j];
       // Only draw an ellipse is the pose probability is bigger than 0.2
       if (keypoint.score > 0.2) {
-        fill(255, 0, 0);
+        fill(142, 165, 226);
         noStroke();
         ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
       }
@@ -267,7 +268,7 @@ function drawSkeleton() {
     for (let j = 0; j < skeleton.length; j++) {
       let partA = skeleton[j][0];
       let partB = skeleton[j][1];
-      stroke(255, 0, 0);
+      stroke(142, 165, 226);
       line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
     }
   }
@@ -276,11 +277,6 @@ function drawSkeleton() {
 (function localProfessionalVideoPlayer() {
 	'use strict'
   var URL = window.URL || window.webkitURL
-  var displayMessage = function (message, isError) {
-    var element = document.querySelector('#message')
-    element.innerHTML = message
-    element.className = isError ? 'error' : 'info';
-  }
   let playProfessionalFile = function (event) {
     professionalFile = this.files[0]
 
@@ -290,14 +286,9 @@ function drawSkeleton() {
   inputNode.addEventListener('change', playProfessionalFile, false);
 })()
 
-(function localOwnVideoPlayer() { //talk to alyssa, make them match up with HTML separate video submissions and pages.
+(function localOwnVideoPlayer() {
 	'use strict'
   var URL = window.URL || window.webkitURL
-  var displayMessage = function (message, isError) {
-    var element = document.querySelector('#message');
-    element.innerHTML = message;
-    element.className = isError ? 'error' : 'info';
-  }
   let playOwnFile = function (event) {
     ownFile = this.files[0];
     ownFileURL = URL.createObjectURL(ownFile);

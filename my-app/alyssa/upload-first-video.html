@@ -24,17 +24,16 @@
                 please upload the video that you would like to be compared to.
             </p>
             <div class="upload-vid-form">
-                <form onsubmit="onSubmit(event)">
-                    <input type="file" id="vid" name="vid" accept="video/*">
-                    <div class="button">
-                        <input class="submit" type="submit" id="submit1">
+                <form onsubmit="onProfessionalSubmit(event)">
+                    <input type="file" id="vid" name="vid" accept="video/*" required>
+                    <button type="submit">
+                        <div class="button" onclick="document.myform.submit()"></div>
+                        <!-- <input class="submit" type="submit" id="submit1"> -->
                         submit video
+                        </button>
                     </div>
                 </form>
             </div>
-            <!-- <div class="train-me-button">
-                <a class="button" href="second-vid.html">upload video</a>
-            </div> -->
         </div>
         <div class="upload-vid-dancer">
             <img src="images/upload_vid_dancer.png">
