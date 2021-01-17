@@ -208,8 +208,8 @@ function setup(asset) {
         video.volume(0);
       });
 
-  createCanvas(406, 720);
-
+  let canvas = createCanvas(width, height);
+  canvas.center()
   //video.size(width, height);
   poseNet = ml5.poseNet(video, () => {
     console.log("Model is ready");
