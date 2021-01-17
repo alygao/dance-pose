@@ -1,0 +1,88 @@
+button {
+    align-items: center;
+    justify-content: center;
+    border: 7px solid #EEEBE9;
+    background: #93A5E2;
+    font-size: 2em;
+
+    box-sizing: border-box;
+    /* border-radius: 100px; */
+
+    font-family: Space Mono;
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: none;
+
+    color: #191716;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #606b8a;
+    transition: 0.5s;
+    text-align: center;
+    align-items: center;
+}
+
+.recording-button {
+    padding-top: 2em;
+    align-items: center;
+    justify-content: left;
+    display: flex;
+    text-align: center;
+    text-decoration: none;
+    margin: 0px;
+}
+
+
+@media screen and (min-width: 1024px) {
+    .items {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .second-vid-text {
+        display:flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    h1 {
+        font-size: 5em;
+        line-height: 1em;
+    }
+
+    p {
+        font-size: 1.25em;
+        line-height: 36px;
+    }
+
+
+
+    
+
+    .logo {
+        width: 10%; 
+    }
+    .second-vid-dancer {
+        opacity: 0;
+        /* margin-top: 30rem; */
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    button {
+        font-size: 1em;
+    }
+
+    .recording-button {
+        padding-top: 2em;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        text-align: center;
+        text-decoration: none;
+        margin: 0px;
+    }
+}

@@ -28,14 +28,22 @@ input[type="file"] {
     display: none;
 }
 
+img {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
 @media screen and (min-width: 1024px) {
     .items {
         flex-direction: row;
         align-items: center;
-        margin-bottom: 40rem;
     }
-    .upload-vid-dancer {
-        margin-bottom: 40rem;
+    .results-dancer {
+        margin-bottom: 20rem;
+        position: relative;
+        top: 0;
+        left: 0;
     }
     
     .upload-vid-text {
@@ -57,9 +65,12 @@ input[type="file"] {
         margin-top: 20px;
     }
     
-    .upload-vid-dancer {
+    .results-dancer {
         margin-top: 2rem;
-        width:75%
+        width:75%;
+        position: relative;
+        top: 0;
+        left: 0;
         /* margin-top: 30rem; */
     }
     form {
