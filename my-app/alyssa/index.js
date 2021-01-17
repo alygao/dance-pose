@@ -218,20 +218,22 @@ function draw() {
 }
 
 const LIMIT = 100
-let counter = 0
+let counter1 = 0
+let counter2 = 0
 let oneTimeTrigger = true
-let poseArr1 = []
-let poseArr2 = []
 
 function drawKeypoints() {
   for (let i = 0; i < poses.length; i++) {
     
     let pose = poses[i].pose;
-    if (counter++ < LIMIT) {
+    if (!secondCall && poseArr1.length < LIMIT) {
       poseArr1.push(pose)
       console.log(pose)
+    } else if (secondCall && poseArr2.length < LIMIT) {
+      poseArr2.push(pose)
+      console.log(pose)
     } else if (oneTimeTrigger) {
-      let res = calcPoseArrScore(poseArr1, poseArr1)
+      let res = calcPoseArrScore(poseArr1, poseArr2)
       console.log(res.score)
       console.log('Best pose at (' + res.highlights.maxes[0].score + '|' + res.highlights.maxes[0].ind+ ' sec), ('
       + res.highlights.maxes[1].score + '|' + res.highlights.maxes[1].ind  + ' sec), ('
