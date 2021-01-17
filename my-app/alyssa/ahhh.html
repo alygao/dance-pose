@@ -6,10 +6,14 @@
     </head>
     
     <body>
-
-          <div id="message"></div>
-          <input type="file" accept="video/*"/>
-            <video controls autoplay></video>
+            <form onsubmit="onSubmit(event)">
+                <div id="message"></div>
+                <input type="file" required/>
+                <!-- <video controls autoplay id="video"></video> -->
+                <input type="submit">Submit</input>
+            </form>
+          
+            <!-- <-- display none -->
     </body>
 
     <script src="index.js"></script>
