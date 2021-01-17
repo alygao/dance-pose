@@ -181,7 +181,7 @@ function onProfessionalSubmit(event) {
     setup(professionalFileURL);
     document.getElementById("submit1").disabled = true;
     secondCall = true;
-    document.getElementById("image1").style.display = "none";
+    document.getElementById("image1").remove();
     let videoNode = document.querySelector('video');
     videoNode.volume = 0;
     document.getElementById("video1").style.display = "block";
@@ -194,7 +194,7 @@ function onOwnSubmit(event) {
   event.preventDefault();
     setup(professionalFileURL);
     document.getElementById("submit2").disabled = true;
-    document.getElementById("image2").style.display = "none";
+    document.getElementById("image2").remove();
     let videoNode = document.querySelector('video');
     videoNode.volume = 0;
     document.getElementById("video2").style.display = "block";
