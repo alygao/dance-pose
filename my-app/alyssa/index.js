@@ -179,6 +179,7 @@ let ownFileURL;
 function onProfessionalSubmit(event) {
     event.preventDefault();
     setup(professionalFileURL);
+    localStorage.setItem('professionalVideo', professionalFileURL);
     document.getElementById("submit1").disabled = true;
     document.getElementById("image1").remove();
     let videoNode = document.querySelector('video');
@@ -192,6 +193,7 @@ function onOwnSubmit(event) {
     localStorage.setItem("switch", 'true')
     event.preventDefault();
     setup(professionalFileURL);
+    localStorage.setItem('ownVideo', professionalFileURL);
     document.getElementById("submit2").disabled = true;
     document.getElementById("image2").remove();
     let videoNode = document.querySelector('video');
@@ -228,7 +230,7 @@ function draw() {
   drawKeypoints();
 }
 
-const LIMIT = 750
+const LIMIT = 500;
 let poseArr1 = []
 let poseArr2 = []
 
@@ -254,7 +256,7 @@ function drawKeypoints() {
       console.log('calculating')
       let res = calcPoseArrScore(JSON.parse(localStorage.getItem("poseArr1")),
        JSON.parse(localStorage.getItem("poseArr2")))
-      console.log(res.score)
+      console.log(res.score);
       console.log('Best pose at (' + res.highlights.maxes[0].score + '|' + res.highlights.maxes[0].ind+ ' sec), ('
       + res.highlights.maxes[1].score + '|' + res.highlights.maxes[1].ind  + ' sec), ('
       + res.highlights.maxes[2].score + '|' + res.highlights.maxes[2].ind  + ' sec)')
@@ -278,6 +280,13 @@ function drawKeypoints() {
         noStroke();
         ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
       }
+    }
+
+    if ((localStorage.getItem("poseArr2")).length < LIMIT || (localStorage.getItem("poseArr1").length < LIMIT)) {
+      document.getElementById("waitClick").style.display = "none";
+    } else {
+      document.getElementById("waitClick").style.display = "block";
+      //document.getElementById("takeAway").style.display = "none";
     }
   }
 }

@@ -22,8 +22,27 @@
                     document.getElementById("result").innerHTML = "Score: " + localStorage.getItem("score");
                 </script>
             </h1>
-            <p>
-                Below are the timeframes where your two videos were not similar and had a similarity score of less than 50%.
+            <p id="summary">
+                
+                <script>
+                    let results = JSON.parse(localStorage.getItem("highlights"));
+                    document.getElementById("summary").innerHTML = 
+                    `Below are the timeframes where your two videos were the least similar:
+                        ${results.mins[0].ind}s with ${results.mins[0].ind}% similarity, and
+                        ${results.mins[1].ind}s with ${results.mins[1].ind}% similarity, and
+                        ${results.mins[2].ind}s with ${results.mins[2].ind}% similarity`
+                </script>
+            </p>
+
+            <p id="summary2">
+                <script>
+                    let results2 = JSON.parse(localStorage.getItem("highlights"));
+                    document.getElementById("summary2").innerHTML = 
+                    `Below are the timeframes where your two videos were the most similar:
+                        ${results2.maxes[0].ind}s with ${results2.maxes[0].ind}% similarity, and
+                        ${results2.maxes[1].ind}s with ${results2.maxes[1].ind}% similarity, and
+                        ${results2.maxes[2].ind}s with ${results2.maxes[2].ind}% similarity`
+                </script>
             </p>
 
         </div>
