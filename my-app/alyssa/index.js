@@ -39,7 +39,7 @@ function calcPoseArrScore(poseArr1, poseArr2) {
       sum += Math.sqrt(2 * (1 - cosSimArr[i])) * WEIGHTINGS[i]
     }
     return Math.min(sum / WEIGHTING_SUM, 1)
-    }
+  }
 
   // Returns a value in [0, 1], where 1 is more similar
   function calcPoseScore(pose1, pose2) {
@@ -174,13 +174,12 @@ let professionalFile;
 let professionalFileURL;
 let ownFile;
 let ownFileURL;
-let secondCall = false;
+
 
 function onProfessionalSubmit(event) {
     event.preventDefault();
     setup(professionalFileURL);
     document.getElementById("submit1").disabled = true;
-    secondCall = true;
     document.getElementById("image1").remove();
     let videoNode = document.querySelector('video');
     videoNode.volume = 0;
@@ -190,8 +189,8 @@ function onProfessionalSubmit(event) {
 }
 
 function onOwnSubmit(event) {
-
-  event.preventDefault();
+    localStorage.setItem("switch", 'true')
+    event.preventDefault();
     setup(professionalFileURL);
     document.getElementById("submit2").disabled = true;
     document.getElementById("image2").remove();
@@ -229,21 +228,32 @@ function draw() {
   drawKeypoints();
 }
 
-const LIMIT = 100
-let counter = 0
-let oneTimeTrigger = true
+const LIMIT = 750
 let poseArr1 = []
 let poseArr2 = []
 
 function drawKeypoints() {
   for (let i = 0; i < poses.length; i++) {
-    
     let pose = poses[i].pose;
-    if (counter++ < LIMIT) {
+    if (localStorage.getItem("switch") === null && poseArr1.length < LIMIT) {
+      localStorage.setItem("trigger", 'true');
       poseArr1.push(pose)
       console.log(pose)
-    } else if (oneTimeTrigger) {
-      let res = calcPoseArrScore(poseArr1, poseArr1)
+      localStorage.setItem("poseArr1", JSON.stringify(poseArr1));
+      console.log(JSON.parse(localStorage.getItem("poseArr1")).length)
+    } else if (localStorage.getItem("switch") && poseArr2.length < LIMIT) {
+      poseArr2.push(pose)
+      console.log(pose)
+      localStorage.setItem("poseArr2", JSON.stringify(poseArr2));
+      console.log(JSON.parse(localStorage.getItem("poseArr2")).length)
+    } else if (localStorage.getItem("poseArr1") != null
+            && JSON.parse(localStorage.getItem("poseArr1")).length == LIMIT 
+            && localStorage.getItem("poseArr2") != null
+            && JSON.parse(localStorage.getItem("poseArr2")).length == LIMIT
+            && localStorage.getItem("trigger") != null) {
+      console.log('calculating')
+      let res = calcPoseArrScore(JSON.parse(localStorage.getItem("poseArr1")),
+       JSON.parse(localStorage.getItem("poseArr2")))
       console.log(res.score)
       console.log('Best pose at (' + res.highlights.maxes[0].score + '|' + res.highlights.maxes[0].ind+ ' sec), ('
       + res.highlights.maxes[1].score + '|' + res.highlights.maxes[1].ind  + ' sec), ('
@@ -251,7 +261,12 @@ function drawKeypoints() {
       console.log('Worst pose at ('  + res.highlights.mins[0].score + '|' + res.highlights.mins[0].ind  + ' sec), ('
       + res.highlights.mins[1].score + '|' + res.highlights.mins[1].ind + ' sec), ('
       + res.highlights.mins[2].score + '|' + res.highlights.mins[2].ind  + ' sec)')
-      oneTimeTrigger = false
+      localStorage.setItem("score", res.score)
+      localStorage.setItem("highlights", JSON.stringify(res.highlights))
+      localStorage.removeItem("trigger")
+      localStorage.removeItem("switch")
+      localStorage.removeItem("poseArr1")
+      localStorage.removeItem("poseArr2")
     }
 
     for (let j = 0; j < pose.keypoints.length; j++) {
