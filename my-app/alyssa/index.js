@@ -177,23 +177,34 @@ let ownFileURL;
 let secondCall = false;
 
 function onProfessionalSubmit(event) {
-  console.log("Raymond");
     event.preventDefault();
     setup(professionalFileURL);
     document.getElementById("submit1").disabled = true;
     secondCall = true;
-    
+    document.getElementById("image1").style.display = "none";
+    let videoNode = document.querySelector('video');
+    videoNode.volume = 0;
+    document.getElementById("video1").style.display = "block";
+    videoNode.src = professionalFileURL;
+    videoNode.loop = true;
 }
 
 function onOwnSubmit(event) {
+
   event.preventDefault();
-  setup(ownFileURL);
-  document.getElementById("submit2").disabled = true;
+    setup(professionalFileURL);
+    document.getElementById("submit2").disabled = true;
+    document.getElementById("image2").style.display = "none";
+    let videoNode = document.querySelector('video');
+    videoNode.volume = 0;
+    document.getElementById("video2").style.display = "block";
+    videoNode.src = professionalFileURL;
+    videoNode.loop = true;
 }
 
 function setup(asset) {
     video = createVideo([asset], () => {
-        video.play();
+        video.loop();
         video.volume(0);
       });
 
@@ -208,7 +219,7 @@ function setup(asset) {
   poseNet.on("pose", function (results) {
     poses = results;
   });
-  // video.hide();
+  video.hide();
 }
 
 function draw() {
