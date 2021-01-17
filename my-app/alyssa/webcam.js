@@ -89,11 +89,10 @@ function draw() {
     translate(width,0);
     scale(-1, 1);
     image(video, 0, 0, width, height);
-    rectangle();
 
-  // We can call both functions to draw all keypoints and the skeletons
-  drawKeypoints();
-  drawSkeleton();
+    // We can call both functions to draw all keypoints and the skeletons
+    drawKeypoints();
+    drawSkeleton();
 }
 
 // A function to draw ellipses over the detected keypoints
