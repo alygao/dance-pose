@@ -1,9 +1,9 @@
 
 import React, { useState, useCallback } from 'react';
 import './home.css';
-import Video from './video.js';
+// import Video from './video.js';
 import PoseNet from "react-posenet"
-import compareSimilarity from "./compareSimilarity"
+// import compareSimilarity from "./compareSimilarity"
 import calcScore from "./calcScore"
 
 const testObj = {
@@ -29,26 +29,47 @@ const testObj = {
 }
 const testObj2 = {
   keypoints: [
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 0, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 0, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
-      { position: { x: 443.168521094415, y: 556.676242472 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
+      { position: { x: 1, y: 0 } },
   ]
 }
 
+const testObj3 = {
+  keypoints: [
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+      { position: { x: 0, y: 1 } },
+  ]
+}
 
 function Home() {
   let professionalInput = React.createRef();
@@ -57,8 +78,8 @@ function Home() {
   let [professionalVideo, setProfessionalVideo] = useState(null);
   let [ownVideo, setOwnVideo] = useState(null);
 
-  const [count, checkPoses] = compareSimilarity()
-  const onEstimate = useCallback(poses => checkPoses(poses), [checkPoses])
+  //const [count, checkPoses] = compareSimilarity()
+  //const onEstimate = useCallback(poses => checkPoses(poses), [checkPoses])
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -81,7 +102,7 @@ function Home() {
   return (
     <div className="Home">
       <header className="Home-header">
-        <p>{calcScore([testObj, testObj, testObj], [testObj, testObj2, testObj])}</p>
+        <p>{calcScore([testObj3], [testObj3]).score}</p>
       </header>
 
       <form onSubmit={handleSubmit}>
@@ -122,7 +143,7 @@ function Home() {
         </div>
       </form>
 
-      <Video video = {professionalVideo}></Video>
+    
 
       <PoseNet
         className="min-vh-100"
@@ -130,7 +151,7 @@ function Home() {
         inferenceConfig={
           {decodingMethod: "single-person"}
         }
-        onEstimate={onEstimate}
+        // onEstimate={onEstimate}
       /> 
     </div>
   );

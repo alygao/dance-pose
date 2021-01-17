@@ -6,7 +6,6 @@ const WEIGHTING_SUM = 40
 
 
 // Takes in two arrays of poses to compare
-// Returns value in [0, 1], where 1 is more similar
 export default function calcPoseArrScore(poseArr1, poseArr2) {
     // Returns array of values, each in [0, 1]
     function calcCosSimArr(pose1, pose2) {
@@ -44,21 +43,61 @@ export default function calcPoseArrScore(poseArr1, poseArr2) {
         let cosSimArr = calcCosSimArr(pose1, pose2)
         let cosScore = calcCosScore(cosSimArr)
         let euclidScore = calcEucScore(cosSimArr)
-        console.log('CosSimArr: ' + cosSimArr)
-        console.log('Cosine Score: ' + cosScore)
-        console.log('Euclid Score: ' + euclidScore)
+        // console.log('CosSimArr: ' + cosSimArr)
+        // console.log('Cosine Score: ' + cosScore)
+        // console.log('Euclid Score: ' + euclidScore)
 
         return Math.max(0, cosScore - euclidScore)
     }
 
+    // Takes an array of calculated poseScores
+    // Returns the most and least similar poseComparisons
+    function getHighlights(poseScoreArr){
+        if (poseScoreArr.length <= 1) { // choose no best/worst moments
+            return {
+                maxes: {},
+                mins: {}
+            }
+        } else { // choose 1 best and 1 worst moment
+            let min = { score: Number.MAX_SAFE_INTEGER, ind: -1}
+            let max = { score: Number.MIN_SAFE_INTEGER, ind: -1}
+            for (let i = 0; i < poseScoreArr.length; i++) {
+                if (poseScoreArr[i] < min.score) {
+                    min.score = poseScoreArr[i]
+                    min.ind = i
+                }
+                if (poseScoreArr[i] > max.score) {
+                    max.score = poseScoreArr[i]
+                    max.ind = i
+                }
+            }
+
+            min.score = (min.score * 100).toFixed(2)
+            max.score = (max.score * 100).toFixed(2)
+            return {
+                maxes: max,
+                mins: min
+            }
+        }
+    }
 
 
     let minLen = Math.min(poseArr1.length, poseArr2.length)
+    let poseScoreArr = []
     let finScore = 0
     for (let i = 0; i < minLen; i++) {
-        finScore += calcPoseScore(poseArr1[i], poseArr2[i])
+        let s = calcPoseScore(poseArr1[i], poseArr2[i])
+        poseScoreArr[i] = s
+        finScore += s
     }
     finScore = (finScore / minLen * 100).toFixed(2)
-    console.log(finScore)
-    return finScore
+    console.log('FINAL SCORE: ' + finScore)
+
+    let highlights = getHighlights(poseScoreArr)
+    console.log('HIGHLIGHTS BEST: '+ highlights.maxes.score + ' WORST: '+ highlights.mins.score)
+
+    return {
+        score: finScore,
+        highlights: highlights
+    }
 }
