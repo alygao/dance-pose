@@ -178,6 +178,8 @@ let ownFileURL;
 
 function onProfessionalSubmit(event) {
     event.preventDefault();
+    sessionStorage.setItem('professionalVideo', professionalFileURL);
+    console.log(professionalFileURL);
     setup(professionalFileURL);
     document.getElementById("submit1").disabled = true;
     document.getElementById("image1").remove();
@@ -189,15 +191,17 @@ function onProfessionalSubmit(event) {
 }
 
 function onOwnSubmit(event) {
-    localStorage.setItem("switch", 'true')
+  
     event.preventDefault();
-    setup(professionalFileURL);
+    sessionStorage.setItem('ownVideo', ownFileURL);
+    console.log(ownFileURL);
+    setup(ownFileURL);
     document.getElementById("submit2").disabled = true;
     document.getElementById("image2").remove();
     let videoNode = document.querySelector('video');
     videoNode.volume = 0;
     document.getElementById("video2").style.display = "block";
-    videoNode.src = professionalFileURL;
+    videoNode.src = ownFileURL;
     videoNode.loop = true;
 }
 
@@ -208,7 +212,7 @@ function setup(asset) {
       });
 
   let canvas = createCanvas(width, height);
-  canvas.center()
+  canvas.center();
   //video.size(width, height);
   poseNet = ml5.poseNet(video, () => {
     console.log("Model is ready");
