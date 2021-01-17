@@ -128,7 +128,7 @@ function onSubmit(event) {
     // make the video display block
 }
 
-function cheese (results) {
+function update (results) {
   poses = results;
 }
 
@@ -145,7 +145,7 @@ function setup(asset) {
     console.log("Model is ready");
   });
   // Listen to new 'pose' events
-  poseNet.on("pose", cheese);
+  poseNet.on("pose", update);
   // video.hide();
 }
 
@@ -234,11 +234,9 @@ function drawSkeleton() {
     //   return
     // }
 
-    var fileURL = URL.createObjectURL(file)
-
+    var fileURL = URL.createObjectURL(file);
     setup(fileURL);
   }
   var inputNode = document.querySelector('input')
   inputNode.addEventListener('change', playSelectedFile, false)
 })()
-
